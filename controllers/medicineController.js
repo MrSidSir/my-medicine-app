@@ -1,29 +1,70 @@
-import cloudinary from "../config/cloudinary.js";
-import Medicine from "../models/Medicine.js";
+// backend/controllers/medicineController.js
 
+import Medicine from '../models/medicineModel.js';
+
+// ➡️ GET all medicines
+export const getAllMedicines = async (req, res) => {
+  const medicines = await Medicine.find({});
+  res.json(medicines);
+};
+
+// ➡️ GET medicine by ID
+export const getMedicineById = async (req, res) => {
+  const medicine = await Medicine.findById(req.params.id);
+  if (medicine) {
+    res.json(medicine);
+  } else {
+    res.status(404).json({ message: 'Medicine not found' });
+  }
+};
+
+// ➡️ POST create new medicine
 export const createMedicine = async (req, res) => {
-  try {
-    const { name, category, price, description, manufacturer, expiryDate, dosage, stock, prescriptionRequired } = req.body;
-    const result = await cloudinary.uploader.upload(req.file.path, { folder: "medicines" });
+  const { name, category, price, description, countInStock, manufacturer, prescriptionRequired } = req.body;
 
-    const newMedicine = new Medicine({
-      name,
-      imageUrl: result.secure_url,
-      category,
-      price,
-      description,
-      manufacturer,
-      expiryDate,
-      dosage,
-      stock,
-      prescriptionRequired
-    });
+  const medicine = new Medicine({
+    name,
+    category,
+    price,
+    description,
+    countInStock,
+    manufacturer,
+    prescriptionRequired
+  });
 
-    await newMedicine.save();
-    res.status(201).json(newMedicine);
+  const createdMedicine = await medicine.save();
+  res.status(201).json(createdMedicine);
+};
 
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
+// ➡️ PUT update medicine
+export const updateMedicine = async (req, res) => {
+  const { name, category, price, description, countInStock, manufacturer, prescriptionRequired } = req.body;
+
+  const medicine = await Medicine.findById(req.params.id);
+
+  if (medicine) {
+    medicine.name = name || medicine.name;
+    medicine.category = category || medicine.category;
+    medicine.price = price || medicine.price;
+    medicine.description = description || medicine.description;
+    medicine.countInStock = countInStock || medicine.countInStock;
+    medicine.manufacturer = manufacturer || medicine.manufacturer;
+    medicine.prescriptionRequired = prescriptionRequired !== undefined ? prescriptionRequired : medicine.prescriptionRequired;
+
+    const updatedMedicine = await medicine.save();
+    res.json(updatedMedicine);
+  } else {
+    res.status(404).json({ message: 'Medicine not found' });
+  }
+};
+
+// ➡️ DELETE medicine
+export const deleteMedicine = async (req, res) => {
+  const medicine = await Medicine.findById(req.params.id);
+  if (medicine) {
+    await medicine.remove();
+    res.json({ message: 'Medicine removed' });
+  } else {
+    res.status(404).json({ message: 'Medicine not found' });
   }
 };

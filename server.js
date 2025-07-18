@@ -2,18 +2,27 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
+import path from 'path';
+
 
 import authRoutes from "./routes/authRoutes.js";
 import medicineRoutes from "./routes/medicineRoutes.js";
+import prescriptionRoutes from './routes/prescriptionRoutes.js';
 
 dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/medicines", medicineRoutes);
+app.use('/api/prescriptions', prescriptionRoutes);
+
+// ➡️ Serve static prescription uploads folder
+app.use('/uploads/prescriptions', express.static(path.join(__dirname, '/uploads/prescriptions')));
 
 // DB Connection
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })

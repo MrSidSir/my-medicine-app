@@ -1,12 +1,20 @@
-import express from "express";
-import { createMedicine, getAllMedicines, getMedicineById } from "../controllers/medicineController.js";
-import upload from "../middleware/uploadMiddleware.js";
-import { protect, admin } from "../middleware/authMiddleware.js";
+// backend/routes/medicineRoutes.js
+
+import express from 'express';
+import {
+  getAllMedicines,
+  getMedicineById,
+  createMedicine,
+  updateMedicine,
+  deleteMedicine
+} from '../controllers/medicineController.js';
 
 const router = express.Router();
 
-router.get("/", getAllMedicines);
-router.get("/:id", getMedicineById);
-router.post("/", protect, admin, upload.single("image"), createMedicine);
+router.get('/', getAllMedicines);
+router.get('/:id', getMedicineById);
+router.post('/create-medicine', createMedicine);
+router.put('/edit/:id', updateMedicine);
+router.delete('/:id', deleteMedicine);
 
 export default router;
