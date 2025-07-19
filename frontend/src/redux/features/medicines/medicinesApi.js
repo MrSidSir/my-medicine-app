@@ -1,7 +1,7 @@
 // src/redux/features/medicines/medicinesApi.js
 
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import getBaseUrl from '../../../utils/baseURL';
+import getBaseUrl from '../../../app/utils/baseURL';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${getBaseUrl()}/api/medicines`,
