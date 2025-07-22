@@ -1,15 +1,16 @@
-// src/redux/features/medicines/medicinesApi.js
-
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import getBaseUrl from '../../../app/utils/baseURL';
+import getBaseUrl from '@/app/utils/baseURL'; // ✅ Use alias import
 
+// ✅ Ensure window is defined before accessing localStorage in SSR
 const baseQuery = fetchBaseQuery({
   baseUrl: `${getBaseUrl()}/api/medicines`,
   credentials: 'include',
   prepareHeaders: (headers) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
     }
     return headers;
   },
