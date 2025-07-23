@@ -6,6 +6,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   isAdmin: { type: Boolean, default: false },
+  googleId: { type: String },
+  avatar: { type: String },
 }, { timestamps: true });
 
 // Hash password before saving
@@ -21,4 +23,5 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-export default mongoose.model("User", userSchema);
+// ✅ THIS LINE FIXES OverwriteModelError:
+export default mongoose.models.User || mongoose.model("User", userSchema);

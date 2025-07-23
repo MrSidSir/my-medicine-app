@@ -1,5 +1,3 @@
-// backend/routes/medicineRoutes.js
-
 import express from 'express';
 import {
   getAllMedicines,
@@ -14,7 +12,7 @@ const router = express.Router();
 router.get('/', getAllMedicines);
 router.get('/:id', getMedicineById);
 router.post('/create-medicine', createMedicine);
-router.put('/edit/:id', updateMedicine);
+router.put('/:id', updateMedicine);
 router.delete('/:id', deleteMedicine);
 
 export default router;
