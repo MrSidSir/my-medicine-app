@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import getBaseUrl from '@/app/utils/baseURL'; // ✅ Use alias import
+import getBaseUrl from '@/app/utils/baseURL';
 
-// ✅ Ensure window is defined before accessing localStorage in SSR
 const baseQuery = fetchBaseQuery({
   baseUrl: `${getBaseUrl()}/api/medicines`,
   credentials: 'include',
@@ -23,6 +22,10 @@ const medicinesApi = createApi({
   endpoints: (builder) => ({
     fetchAllMedicines: builder.query({
       query: () => "/",
+      providesTags: ["Medicines"],
+    }),
+    getFeaturedMedicines: builder.query({
+      query: () => "/featured",
       providesTags: ["Medicines"],
     }),
     fetchMedicineById: builder.query({
@@ -57,6 +60,7 @@ const medicinesApi = createApi({
 
 export const {
   useFetchAllMedicinesQuery,
+  useGetFeaturedMedicinesQuery,
   useFetchMedicineByIdQuery,
   useAddMedicineMutation,
   useUpdateMedicineMutation,

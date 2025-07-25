@@ -1,9 +1,11 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '../../context/LanguageProvider'; // ✅ Make sure this path is correct!
 
 export default function Footer() {
   const router = useRouter();
+  const { language, changeLanguage } = useLanguage(); // ✅ Use context safely
 
   const sections = [
     {
@@ -44,7 +46,6 @@ export default function Footer() {
 
   return (
     <footer className="bg-gray-200 text-black text-sm mt-10">
-      {/* Back to top */}
       <div
         className="text-center py-3 bg-gray-300 cursor-pointer hover:bg-gray-400"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -52,7 +53,6 @@ export default function Footer() {
         Back to top
       </div>
 
-      {/* Links sections */}
       <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 border-b border-gray-400">
         {sections.map((section, idx) => (
           <div key={idx}>
@@ -72,13 +72,13 @@ export default function Footer() {
         ))}
       </div>
 
-      {/* Bottom bar */}
       <div className="flex flex-col md:flex-row items-center justify-between px-4 py-4 bg-gray-300 text-xs">
         <div className="flex items-center space-x-2 mb-2 md:mb-0">
           <span>🌐</span>
           <select
             className="bg-gray-200 border border-gray-400 px-2 py-1 rounded"
-            defaultValue="en"
+            value={language}
+            onChange={(e) => changeLanguage(e.target.value)}
           >
             <option value="en">English</option>
             <option value="hi">हिंदी</option>
