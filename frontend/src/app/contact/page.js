@@ -87,8 +87,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-800">Phone</h3>
-                    <p className="text-gray-600">+91 9876543210</p>
-                    <p className="text-gray-600">+91 8765432109</p>
+                    <p className="text-gray-600">+91 7355534404</p>
+                    <p className="text-gray-600">+91 7355534404</p>
                   </div>
                 </div>
 
@@ -98,8 +98,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-800">Email</h3>
-                    <p className="text-gray-600">support@medistore.com</p>
-                    <p className="text-gray-600">orders@medistore.com</p>
+                    <p className="text-gray-600">irshad1554@gmail.com</p>
+                    <p className="text-gray-600">irshadsyed363@gmail.com</p>
                   </div>
                 </div>
 
@@ -109,8 +109,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-800">Address</h3>
-                    <p className="text-gray-600">123 Medical Plaza</p>
-                    <p className="text-gray-600">Delhi, India - 110001</p>
+                    <p className="text-gray-600">40 futta road, shaheen bagh</p>
+                    <p className="text-gray-600"> New Delhi, India - 110044</p>
                   </div>
                 </div>
 
@@ -133,7 +133,7 @@ export default function ContactPage() {
                   <h3 className="font-bold text-red-800">Emergency Support</h3>
                 </div>
                 <p className="text-red-700 mb-2">For urgent medical assistance:</p>
-                <p className="font-bold text-red-800">📞 +91 9999999999</p>
+                <p className="font-bold text-red-800">📞 +91 7355534404</p>
                 <p className="text-sm text-red-600 mt-2">Available 24/7</p>
               </div>
             </div>

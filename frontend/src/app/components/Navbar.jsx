@@ -2,26 +2,21 @@
 
 import { useState, useContext } from "react";
 import { FiSearch, FiHeart, FiShoppingCart, FiUser } from "react-icons/fi";
-import { BiLogOut } from "react-icons/bi";
 import { useRouter } from 'next/navigation';
 import { useFetchAllMedicinesQuery } from "../../../src/redux/features/medicines/medicinesApi";
 import { useLanguage } from "../../../src/context/LanguageProvider";
 import { AuthContext } from "../../../src/context/AuthContext";
-import { GoogleLogin } from "@react-oauth/google";
 
 export default function Navbar() {
   const router = useRouter();
   const { currentUser, logout } = useContext(AuthContext);
   const { language, changeLanguage, t } = useLanguage();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const { data: medicines = [] } = useFetchAllMedicinesQuery();
   const uniqueCategories = [...new Set(medicines.map(m => m.category))];
 
-  const handleLanguageChange = (e) => {
-    changeLanguage(e.target.value);
-  };
+  const handleLanguageChange = (e) => changeLanguage(e.target.value);
 
   const handleLogout = () => {
     logout();
@@ -29,143 +24,81 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-green-600 to-green-400 text-white">
-      {/* Top bar */}
-      <div className="flex justify-between items-center px-4 py-2 text-sm">
-        <p>{t('freeDelivery')}</p>
-        <select
-          value={language}
-          onChange={handleLanguageChange}
-          className="bg-green-700 text-white px-2 py-1 rounded cursor-pointer hover:bg-green-800 transition-colors"
-        >
-          <option value="en">English</option>
-          <option value="hi">हिंदी</option>
-          <option value="ur">اردو</option>
-        </select>
-      </div>
-
-      {/* Main navbar */}
-      <div className="flex justify-between items-center px-4 py-3 bg-green-700">
+    <nav className="bg-green-700 text-white">
+      {/* Top Bar */}
+      <div className="flex items-center justify-between px-4 py-2 text-sm">
         <div className="flex items-center space-x-4">
           <h1
-            className="text-xl font-bold cursor-pointer hover:text-yellow-300 transition-colors"
+            className="text-xl font-bold cursor-pointer hover:text-yellow-300"
             onClick={() => router.push('/')}
           >
             🏥 MediStore
           </h1>
-
-          {/* Desktop menu */}
-          <div className="hidden md:flex space-x-4">
-            <button 
-              onClick={() => router.push('/')} 
-              className="hover:text-yellow-300 transition-colors px-2 py-1 rounded hover:bg-green-600"
-            >
-              {t('home')}
-            </button>
-            <button 
-              onClick={() => router.push('/about')} 
-              className="hover:text-yellow-300 transition-colors px-2 py-1 rounded hover:bg-green-600"
-            >
-              {t('about')}
-            </button>
-            <button 
-              onClick={() => router.push('/contact')} 
-              className="hover:text-yellow-300 transition-colors px-2 py-1 rounded hover:bg-green-600"
-            >
-              {t('contact')}
-            </button>
-            <div className="relative group">
-              <button className="hover:text-yellow-300 transition-colors px-2 py-1 rounded hover:bg-green-600">
-                {t('categories')} ▾
-              </button>
-              <div className="absolute bg-white text-black shadow-lg rounded hidden group-hover:block mt-1 z-50 min-w-[200px]">
-                {uniqueCategories.length > 0 ? (
-                  uniqueCategories.map((cat, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => router.push(`/category/${cat}`)}
-                      className="block px-4 py-2 hover:bg-green-100 w-full text-left transition-colors"
-                    >
-                      {cat}
-                    </button>
-                  ))
-                ) : (
-                  <p className="px-4 py-2 text-gray-500">{t('loading')}</p>
-                )}
-              </div>
-            </div>
-          </div>
+          <p className="hidden md:block">Delivering to Delhi 110001</p>
         </div>
 
-        {/* Right icons */}
+        {/* Search Bar */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const searchValue = e.target.search.value.trim();
+            if (searchValue) {
+              router.push(`/search?q=${encodeURIComponent(searchValue)}`);
+            }
+          }}
+          className="flex flex-grow max-w-lg mx-4 bg-white rounded overflow-hidden"
+        >
+          <input
+            type="text"
+            name="search"
+            placeholder="Search medicines, categories..."
+            className="flex-grow px-3 py-2 text-black outline-none"
+          />
+          <button type="submit" className="px-4 bg-yellow-400 hover:bg-yellow-500 text-black">
+            <FiSearch />
+          </button>
+        </form>
+
+        {/* Right Side */}
         <div className="flex items-center space-x-4">
-          {/* Search */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const searchValue = e.target.search.value.trim();
-              if (searchValue) {
-                router.push(`/search?q=${encodeURIComponent(searchValue)}`);
-              }
-            }}
-            className="hidden md:flex bg-green-600 rounded px-2 py-1 hover:bg-green-500 transition-colors"
+          <select
+            value={language}
+            onChange={handleLanguageChange}
+            className="bg-green-600 text-white px-2 py-1 rounded cursor-pointer hover:bg-green-800"
           >
-            <input
-              type="text"
-              name="search"
-              placeholder={t('searchPlaceholder')}
-              className="bg-transparent outline-none text-white px-2 placeholder-green-200"
-            />
-            <button type="submit" className="hover:text-yellow-300 transition-colors">
-              <FiSearch />
-            </button>
-          </form>
+            <option value="en">EN</option>
+            <option value="hi">HI</option>
+            <option value="ur">UR</option>
+          </select>
 
-          {/* Icons */}
-          <FiHeart
-            className="cursor-pointer hover:text-yellow-300 transition-colors text-xl"
-            onClick={() => router.push('/wishlist')}
-            title={t('wishlist') || 'Wishlist'}
-          />
-          <FiShoppingCart
-            className="cursor-pointer hover:text-yellow-300 transition-colors text-xl"
-            onClick={() => router.push('/cart')}
-            title={t('cart') || 'Cart'}
-          />
-
-          {/* User/Admin Dropdown */}
           <div className="relative">
             <FiUser
-              className="cursor-pointer hover:text-yellow-300 transition-colors text-xl"
+              className="cursor-pointer text-xl hover:text-yellow-300"
               onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
               title={currentUser ? t('dashboard') : t('login')}
             />
             {isUserMenuOpen && (
-              <div className="absolute right-0 bg-white text-black rounded-lg shadow-lg mt-2 z-50 w-48 border">
+              <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded shadow-lg z-50">
                 {currentUser ? (
                   <>
-                    <div className="px-4 py-2 border-b border-gray-200 bg-gray-50">
-                      <p className="text-sm text-gray-600 truncate">
-                        {currentUser.email || currentUser.name}
-                      </p>
-                    </div>
+                    <p className="px-4 py-2 border-b">{currentUser.email || currentUser.name}</p>
                     <button
                       onClick={() => {
                         router.push('/user-dashboard');
                         setIsUserMenuOpen(false);
                       }}
-                      className="block w-full text-left px-4 py-2 hover:bg-green-100 transition-colors"
+                      className="block w-full text-left px-4 py-2 hover:bg-green-100"
                     >
-                      {t('dashboard')}
+                      Dashboard
                     </button>
                     <button
                       onClick={() => {
                         handleLogout();
                         setIsUserMenuOpen(false);
                       }}
-                      className="block w-full text-left px-4 py-2 hover:bg-red-100 text-red-600 transition-colors"
+                      className="block w-full text-left px-4 py-2 text-red-600 hover:bg-red-100"
                     >
-                      {t('logout')}
+                      Logout
                     </button>
                   </>
                 ) : (
@@ -175,151 +108,64 @@ export default function Navbar() {
                         router.push('/login');
                         setIsUserMenuOpen(false);
                       }}
-                      className="block w-full text-left px-4 py-2 hover:bg-green-100 transition-colors"
+                      className="block w-full text-left px-4 py-2 hover:bg-green-100"
                     >
-                      {t('login')}
+                      Login
                     </button>
                     <button
                       onClick={() => {
                         router.push('/register');
                         setIsUserMenuOpen(false);
                       }}
-                      className="block w-full text-left px-4 py-2 hover:bg-green-100 transition-colors"
+                      className="block w-full text-left px-4 py-2 hover:bg-green-100"
                     >
-                      {t('signUp')}
+                      Sign Up
                     </button>
-                    <div className="px-4 py-2 border-t border-gray-200">
-                      <GoogleLogin
-                        onSuccess={credentialResponse => {
-                          console.log(credentialResponse);
-                          setIsUserMenuOpen(false);
-                          // Handle Google auth logic here
-                        }}
-                        onError={() => {
-                          console.log("Google login failed");
-                        }}
-                        size="medium"
-                        width="100%"
-                      />
-                    </div>
                   </>
                 )}
               </div>
             )}
           </div>
 
-          {/* Mobile menu toggle */}
-          <button 
-            onClick={() => setIsMenuOpen(!isMenuOpen)} 
-            className="md:hidden text-xl hover:text-yellow-300 transition-colors"
+          <div
+            className="cursor-pointer hover:text-yellow-300"
+            onClick={() => router.push('/orders')}
+            title="Returns & Orders"
           >
-            ☰
-          </button>
+            Returns & Orders
+          </div>
+
+          <FiShoppingCart
+            className="cursor-pointer text-xl hover:text-yellow-300"
+            onClick={() => router.push('/cart')}
+            title="Cart"
+          />
         </div>
       </div>
 
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-green-600 px-4 py-2 space-y-2 border-t border-green-500">
-          {/* Mobile Search */}
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const searchValue = e.target.mobileSearch.value.trim();
-              if (searchValue) {
-                router.push(`/search?q=${encodeURIComponent(searchValue)}`);
-                setIsMenuOpen(false);
-              }
-            }}
-            className="flex bg-green-500 rounded px-2 py-2 mb-3"
-          >
-            <input
-              type="text"
-              name="mobileSearch"
-              placeholder={t('searchPlaceholder')}
-              className="bg-transparent outline-none text-white px-2 placeholder-green-200 flex-1"
-            />
-            <button type="submit" className="hover:text-yellow-300 transition-colors">
-              <FiSearch />
-            </button>
-          </form>
+      {/* Category Menu */}
+      <div className="bg-green-600 flex space-x-4 px-4 py-2 overflow-x-auto text-sm">
+        <button onClick={() => router.push('/')} className="hover:text-yellow-300">All</button>
+        <button onClick={() => router.push('/fresh')} className="hover:text-yellow-300">Fresh</button>
+        <button onClick={() => router.push('/bestsellers')} className="hover:text-yellow-300">Bestsellers</button>
+        <button onClick={() => router.push('/todaydeals')} className="hover:text-yellow-300">Today's Deals</button>
+        <button onClick={() => router.push('/mobiles')} className="hover:text-yellow-300">Mobiles</button>
+        <button onClick={() => router.push('/prime')} className="hover:text-yellow-300">Prime</button>
+        <button onClick={() => router.push('/customer-service')} className="hover:text-yellow-300">Customer Service</button>
+        <button onClick={() => router.push('/electronics')} className="hover:text-yellow-300">Electronics</button>
+        <button onClick={() => router.push('/beauty')} className="hover:text-yellow-300">Beauty</button>
 
-          <button 
-            onClick={() => {
-              router.push('/');
-              setIsMenuOpen(false);
-            }} 
-            className="block w-full text-left hover:text-yellow-300 transition-colors py-2 px-2 rounded hover:bg-green-500"
+        {/* Dynamic Categories */}
+        {uniqueCategories.map((cat, idx) => (
+          <button
+            key={idx}
+            onClick={() => router.push(`/category/${cat}`)}
+            className="hover:text-yellow-300"
           >
-            {t('home')}
+            {cat}
           </button>
-          <button 
-            onClick={() => {
-              router.push('/about');
-              setIsMenuOpen(false);
-            }} 
-            className="block w-full text-left hover:text-yellow-300 transition-colors py-2 px-2 rounded hover:bg-green-500"
-          >
-            {t('about')}
-          </button>
-          <button 
-            onClick={() => {
-              router.push('/contact');
-              setIsMenuOpen(false);
-            }} 
-            className="block w-full text-left hover:text-yellow-300 transition-colors py-2 px-2 rounded hover:bg-green-500"
-          >
-            {t('contact')}
-          </button>
-          
-          {/* Mobile Categories */}
-          <div className="py-2">
-            <p className="font-semibold text-yellow-300 mb-2">{t('categories')}</p>
-            <div className="pl-4 space-y-1">
-              {uniqueCategories.length > 0 ? (
-                uniqueCategories.map((cat, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => {
-                      router.push(`/category/${cat}`);
-                      setIsMenuOpen(false);
-                    }}
-                    className="block w-full text-left hover:text-yellow-300 transition-colors py-1 px-2 rounded hover:bg-green-500"
-                  >
-                    {cat}
-                  </button>
-                ))
-              ) : (
-                <p className="text-green-200">{t('loading')}</p>
-              )}
-            </div>
-          </div>
-
-          {/* Mobile Auth Options */}
-          {!currentUser && (
-            <div className="border-t border-green-500 pt-2 mt-2">
-              <button 
-                onClick={() => {
-                  router.push('/login');
-                  setIsMenuOpen(false);
-                }} 
-                className="block w-full text-left hover:text-yellow-300 transition-colors py-2 px-2 rounded hover:bg-green-500"
-              >
-                {t('login')}
-              </button>
-              <button 
-                onClick={() => {
-                  router.push('/register');
-                  setIsMenuOpen(false);
-                }} 
-                className="block w-full text-left hover:text-yellow-300 transition-colors py-2 px-2 rounded hover:bg-green-500"
-              >
-                {t('signUp')}
-              </button>
-            </div>
-          )}
-        </div>
-      )}
+        ))}
+      </div>
     </nav>
   );
 }
