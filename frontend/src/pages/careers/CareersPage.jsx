@@ -1,7 +1,7 @@
 import React from "react";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
-import ChatWidget from "../../components/common/ChatWidget";
+import ChatWidget from "@/app/components/common/ChatWidget";
 
 const CareersPage = () => {
   const jobList = [

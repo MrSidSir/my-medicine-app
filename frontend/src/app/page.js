@@ -33,7 +33,7 @@
           <AllMedicines category={selectedCategory} />
 
           {/* Amazon-like Products Section */}
-          <Products />
+          {/* <Products /> */}
         </main>
 
         <Footer />

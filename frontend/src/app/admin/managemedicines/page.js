@@ -37,6 +37,7 @@ const ManageMedicines = () => {
             <th className='p-2 border'>Price</th>
             <th className='p-2 border'>Stock</th>
             <th className='p-2 border'>Expiry</th>
+            <th className='p-2 border'>Featured</th>
             <th className='p-2 border'>Actions</th>
           </tr>
         </thead>
@@ -47,6 +48,15 @@ const ManageMedicines = () => {
               <td className='p-2 border'>${med.price}</td>
               <td className='p-2 border'>{med.stock}</td>
               <td className='p-2 border'>{med.expiryDate || 'N/A'}</td>
+              <td className='p-2 border'>
+                <input
+                  type="checkbox"
+                  checked={med.isFeatured}
+                  onChange={async () => await updateMedicine({ id: med._id, isFeatured: !med.isFeatured })}
+                  className="mr-2"
+                  title="Toggle Featured"
+                />
+              </td>
               <td className='p-2 border'>
                 <Link href={`/admin/edit-medicine/${med._id}`} className='text-blue-500 hover:underline mr-2'>
                   Edit

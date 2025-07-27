@@ -2,6 +2,15 @@
 
 import { useRouter } from 'next/navigation';
 import { useLanguage } from '../../context/LanguageProvider'; // ✅ Make sure this path is correct!
+import FooterLinks from "@/app/components/footer/FooterLinks";
+
+function safePush(router, href) {
+  try {
+    router.push(href);
+  } catch (e) {
+    alert('Page not found or navigation error.');
+  }
+}
 
 export default function Footer() {
   const router = useRouter();
@@ -55,20 +64,7 @@ export default function Footer() {
 
       <div className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 border-b border-gray-400">
         {sections.map((section, idx) => (
-          <div key={idx}>
-            <h3 className="font-semibold mb-2">{section.title}</h3>
-            <ul>
-              {section.links.map((link, i) => (
-                <li
-                  key={i}
-                  className="mb-1 cursor-pointer hover:text-green-700 transition-colors"
-                  onClick={() => router.push(link.href)}
-                >
-                  {link.label}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FooterLinks key={idx} title={section.title} links={section.links} />
         ))}
       </div>
 

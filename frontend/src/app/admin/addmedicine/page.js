@@ -62,6 +62,16 @@ const AddMedicine = () => {
           />
           <label>Prescription Required</label>
         </div>
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            name="isFeatured"
+            checked={formData.isFeatured || false}
+            onChange={handleChange}
+            className="mr-2"
+          />
+          <label>Featured</label>
+        </div>
 
         <button type="submit" className="btn-primary w-full" disabled={isLoading}>
           {isLoading ? "Adding..." : "Add Medicine"}

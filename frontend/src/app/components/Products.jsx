@@ -5,7 +5,7 @@ import { medicines } from "../data/medicines";
 export default function Products() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h2 className="text-2xl font-bold mb-6">Featured Medicines</h2>
+      <h2 className="text-2xl font-bold mb-6">Products</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {medicines.map((med) => (
           <div
