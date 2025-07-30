@@ -28,6 +28,17 @@ const medicineSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    image: {
+      type: String,
+      default: "",
+    },
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
+    expiryDate: {
+      type: Date,
+    },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -38,5 +49,4 @@ const medicineSchema = new mongoose.Schema(
   }
 );
 
-const Medicine = mongoose.model("Medicine", medicineSchema);
-export default Medicine;
+export default mongoose.model("Medicine", medicineSchema);
